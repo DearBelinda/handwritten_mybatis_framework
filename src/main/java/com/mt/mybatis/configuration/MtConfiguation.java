@@ -3,7 +3,6 @@ package com.mt.mybatis.configuration;
 import com.mt.mybatis.mapper.MapperRegistory;
 
 import java.io.*;
-import java.net.URL;
 import java.util.Properties;
 
 /**

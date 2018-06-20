@@ -6,9 +6,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
- * <p>MapperProxy</p>
+ * <p>MapperProxy，模拟mybatis的mapper代理对象</p>
  *
- * @author suhongwei 2018/6/20
+ * @author grand 2018/6/20
  * @version V1.0
  * @modificationHistory=========================逻辑或功能性重大变更记录
  * @modify by user: {修改人}

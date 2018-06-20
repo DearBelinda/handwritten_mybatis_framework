@@ -1,6 +1,8 @@
 package com.mt.mybatis.result;
 
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -9,15 +11,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * <p></p>
+ * <p>模拟Mybatis查询结果到pojo对象的封装</p>
  *
- * @author suhongwei 2018/6/20
+ * @author grand 2018/6/20
  * @version V1.0
  * @modificationHistory=========================逻辑或功能性重大变更记录
  * @modify by user: {修改人}
  * @modify by reason:{方法名}:{原因}
  */
 public class ResultHandler {
+    private Logger logger = LoggerFactory.getLogger(ResultHandler.class);
+
     private Class type;
     private ResultSet resultSet;
 
@@ -26,14 +30,33 @@ public class ResultHandler {
         this.resultSet = resultSet;
     }
 
-    public <E> E handle() throws SQLException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Object resultObject = new DefaultObjectFactory().create(type);
-        if(resultSet.next()){
-            for(Field field:resultObject.getClass().getDeclaredFields()){
-                setValue(resultObject,field,resultSet);
+    public <E> E handle() {
+        try{
+            Object resultObject = new DefaultObjectFactory().create(type);
+            if(resultSet.next()){
+                for(Field field:resultObject.getClass().getDeclaredFields()){
+                    setValue(resultObject,field,resultSet);
+                }
+            }
+            return (E) resultObject;
+        } catch (IllegalAccessException e) {
+            logger.error("IllegalAccessException happen when processing in ResultHandler:"+e);
+        } catch (SQLException e) {
+            logger.error("SQLException happen when processing in ResultHandler:"+e);
+        } catch (NoSuchMethodException e) {
+            logger.error("NoSuchMethodException happen when processing in ResultHandler:"+e);
+        } catch (InvocationTargetException e) {
+            logger.error("InvocationTargetException happen when processing in ResultHandler:"+e);
+        }finally {
+            try {
+                if(resultSet!=null){
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        return (E) resultObject;
+        return null;
     }
 
     public void setValue( Object resultObject,Field field,ResultSet resultSet) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, SQLException {
@@ -59,6 +82,4 @@ public class ResultHandler {
         String tail = name.substring(1);
         return first.toUpperCase() + tail;
     }
-
-
 }

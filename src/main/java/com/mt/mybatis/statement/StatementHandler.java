@@ -10,9 +10,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 
 /**
- * <p>StatementHandler</p>
+ * <p>StatementHandler，语句集处理</p>
  *
- * @author suhongwei 2018/6/20
+ * @author grand 2018/6/20
  * @version V1.0
  * @modificationHistory=========================逻辑或功能性重大变更记录
  * @modify by user: {修改人}
@@ -26,8 +26,11 @@ public class StatementHandler {
     }
 
     public <E> E query(MapperData mapperData, Object parameter){
+        Connection conn = null;
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = getConnection().prepareStatement(mapperData.getSql());
+            conn = getConnection();
+            preparedStatement = conn.prepareStatement(mapperData.getSql());
             ParameterHandler parameterHandler = new ParameterHandler(preparedStatement);
             parameterHandler.setParameters(parameter);
             preparedStatement.execute();
@@ -37,12 +40,17 @@ public class StatementHandler {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        }finally {
+            try {
+                if(preparedStatement!=null){
+                    preparedStatement.close();
+                }
+                if(conn!=null){
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
