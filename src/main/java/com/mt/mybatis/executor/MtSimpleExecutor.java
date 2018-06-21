@@ -1,6 +1,6 @@
 package com.mt.mybatis.executor;
 
-import com.mt.mybatis.configuration.MtConfiguation;
+import com.mt.mybatis.configuration.MtConfiguration;
 import com.mt.mybatis.mapper.MapperData;
 import com.mt.mybatis.statement.StatementHandler;
 
@@ -14,9 +14,9 @@ import com.mt.mybatis.statement.StatementHandler;
  * @modify by reason:{方法名}:{原因}
  */
 public class MtSimpleExecutor implements MtExecutor {
-    private MtConfiguation configuation;
+    private MtConfiguration configuation;
 
-    public MtSimpleExecutor(MtConfiguation configuation){
+    public MtSimpleExecutor(MtConfiguration configuation){
         this.configuation = configuation;
     }
 

@@ -1,6 +1,6 @@
 package com.mt.mybatis.session;
 
-import com.mt.mybatis.configuration.MtConfiguation;
+import com.mt.mybatis.configuration.MtConfiguration;
 import com.mt.mybatis.executor.MtExecutor;
 import com.mt.mybatis.mapper.MapperData;
 import com.mt.mybatis.mapper.MtMapperProxy;
@@ -17,10 +17,10 @@ import java.lang.reflect.Proxy;
  * @modify by reason:{方法名}:{原因}
  */
 public class MtSqlSession {
-    private MtConfiguation configuration;
+    private MtConfiguration configuration;
     private MtExecutor executor;
 
-    public MtSqlSession(MtConfiguation configuration,MtExecutor executor) {
+    public MtSqlSession(MtConfiguration configuration, MtExecutor executor) {
         this.configuration = configuration;
         this.executor = executor;
     }
@@ -33,7 +33,7 @@ public class MtSqlSession {
         return executor.query(mapperData, parameter);
     }
 
-    public MtConfiguation getConfiguration() {
+    public MtConfiguration getConfiguration() {
         return configuration;
     }
 }

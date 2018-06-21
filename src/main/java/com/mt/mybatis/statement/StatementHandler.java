@@ -1,12 +1,11 @@
 package com.mt.mybatis.statement;
 
-import com.mt.mybatis.configuration.MtConfiguation;
+import com.mt.mybatis.configuration.MtConfiguration;
 import com.mt.mybatis.configuration.MtDataSource;
 import com.mt.mybatis.mapper.MapperData;
 import com.mt.mybatis.parameter.ParameterHandler;
 import com.mt.mybatis.result.ResultHandler;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 
 /**
@@ -19,9 +18,9 @@ import java.sql.*;
  * @modify by reason:{方法名}:{原因}
  */
 public class StatementHandler {
-    private MtConfiguation configuation;
+    private MtConfiguration configuation;
 
-    public StatementHandler(MtConfiguation configuation){
+    public StatementHandler(MtConfiguration configuation){
         this.configuation = configuation;
     }
 

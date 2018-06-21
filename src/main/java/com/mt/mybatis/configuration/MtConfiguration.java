@@ -21,7 +21,7 @@ import java.util.Properties;
  * @modify by user: {修改人}
  * @modify by reason:{方法名}:{原因}
  */
-public class MtConfiguation {
+public class MtConfiguration {
     private Properties configProperties = new Properties();
     private String configLocation;
     private MtDataSource dataSource;
@@ -31,7 +31,7 @@ public class MtConfiguation {
     private MtTypeHandlerRegistory typeHandlerRegistory = new MtTypeHandlerRegistory();
 
 
-    public MtConfiguation(String configLocation){
+    public MtConfiguration(String configLocation){
         this.configLocation = configLocation;
         init();
     }

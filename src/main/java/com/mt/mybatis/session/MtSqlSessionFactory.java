@@ -1,6 +1,6 @@
 package com.mt.mybatis.session;
 
-import com.mt.mybatis.configuration.MtConfiguation;
+import com.mt.mybatis.configuration.MtConfiguration;
 import com.mt.mybatis.executor.ExecutorType;
 import com.mt.mybatis.executor.MtExecutor;
 
@@ -14,9 +14,9 @@ import com.mt.mybatis.executor.MtExecutor;
  * @modify by reason:{方法名}:{原因}
  */
 public class MtSqlSessionFactory {
-    private MtConfiguation configuration;
+    private MtConfiguration configuration;
 
-    public MtSqlSessionFactory(MtConfiguation configuration) {
+    public MtSqlSessionFactory(MtConfiguration configuration) {
         this.configuration = configuration;
     }
 
