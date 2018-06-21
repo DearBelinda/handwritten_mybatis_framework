@@ -1,6 +1,7 @@
 package com.mt.mybatis.session;
 
 import com.mt.mybatis.configuration.MtConfiguation;
+import com.mt.mybatis.executor.ExecutorType;
 import com.mt.mybatis.executor.MtExecutor;
 
 /**
@@ -13,15 +14,19 @@ import com.mt.mybatis.executor.MtExecutor;
  * @modify by reason:{方法名}:{原因}
  */
 public class MtSqlSessionFactory {
-    private MtConfiguation configuation;
-    private MtExecutor executor;
+    private MtConfiguation configuration;
 
-    public MtSqlSessionFactory(MtConfiguation configuation,MtExecutor executor) {
-        this.configuation = configuation;
-        this.executor = executor;
+    public MtSqlSessionFactory(MtConfiguation configuration) {
+        this.configuration = configuration;
     }
 
     public MtSqlSession openSession() {
-        return new MtSqlSession(configuation,executor);
+        return openSessionFromDataSource(ExecutorType.SIMPLE);
+    }
+
+    private MtSqlSession openSessionFromDataSource(ExecutorType execType) {
+        MtExecutor executor = this.configuration.newExecutor(execType);
+        MtSqlSession sqlSession = new MtSqlSession(configuration, executor);
+        return sqlSession;
     }
 }

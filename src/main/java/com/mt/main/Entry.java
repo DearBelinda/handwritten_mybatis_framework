@@ -7,6 +7,7 @@ import com.mt.mybatis.executor.MtExecutor;
 import com.mt.mybatis.executor.MtSimpleExecutor;
 import com.mt.mybatis.session.MtSqlSession;
 import com.mt.mybatis.session.MtSqlSessionFactory;
+import com.mt.mybatis.session.MtSqlSessionFactoryBuilder;
 
 /**
  * <p>入口</p>
@@ -21,8 +22,8 @@ public class Entry {
 
     public static void main(String[] args) {
         MtConfiguation configuation = new MtConfiguation("mybatis-config.properties");
-        MtExecutor executor = new MtSimpleExecutor(configuation);
-        MtSqlSessionFactory sqlSessionFactory = new MtSqlSessionFactory(configuation,executor);
+        MtSqlSessionFactoryBuilder sqlSessionFactoryBuilder = new MtSqlSessionFactoryBuilder(configuation);
+        MtSqlSessionFactory sqlSessionFactory = sqlSessionFactoryBuilder.build();
         MtSqlSession sqlSession = sqlSessionFactory.openSession();
         PersonDao personDao = sqlSession.getMapper(PersonDao.class);
         Person person = personDao.queryPersonById(1l);

@@ -33,4 +33,12 @@ public class MapperData {
     public void setType(Class type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "MapperData{" +
+                "sql='" + sql + '\'' +
+                ", resultType=" + type +
+                '}';
+    }
 }

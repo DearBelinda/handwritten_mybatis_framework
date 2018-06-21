@@ -1,6 +1,11 @@
 package com.mt.mybatis.configuration;
 
+import com.mt.mybatis.executor.ExecutorType;
+import com.mt.mybatis.executor.MtExecutor;
+import com.mt.mybatis.executor.MtSimpleExecutor;
 import com.mt.mybatis.mapper.MapperRegistory;
+import com.mt.mybatis.plugin.MtInterceptor;
+import com.mt.mybatis.plugin.MtInterceptorChain;
 
 import java.io.*;
 import java.util.Properties;
@@ -20,6 +25,7 @@ public class MtConfiguation {
     private MtDataSource dataSource;
     private Properties mapperProperties = new Properties();
     private MapperRegistory mapperRegistory = new MapperRegistory();
+    private MtInterceptorChain interceptorChain = new MtInterceptorChain();
 
     public MtConfiguation(String configLocation){
         this.configLocation = configLocation;
@@ -27,12 +33,22 @@ public class MtConfiguation {
     }
 
     private void init(){
-        //记载配置文件，这里使用properties代替xml解析
-        loadConfigProperties();
-        //初始化数据源信息
-        initDataSource();
-        //解析并加载mapper文件
-        loadMapperRegistory();
+        try {
+            //记载配置文件，这里使用properties代替xml解析
+            loadConfigProperties();
+            //初始化数据源信息
+            initDataSource();
+            //解析并加载mapper文件
+            loadMapperRegistory();
+            //解析加载plugin
+            initPluginChain();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadConfigProperties(){
@@ -76,6 +92,28 @@ public class MtConfiguation {
     public void initDataSource(){
         this.dataSource = new MtDataSource(configProperties.getProperty("jdbc.url"),configProperties.getProperty("jdbc.driver"),
                 configProperties.getProperty("jdbc.userName"),configProperties.getProperty("jdbc.passWord"));
+    }
+
+    public void initPluginChain() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        String pluginStr = configProperties.getProperty("plugin");
+        String[] pluginArray = pluginStr.split(",");
+        for (String plugin:pluginArray){
+            Class clazz = this.getClass().getClassLoader().loadClass(plugin);
+            if(clazz!=null){
+                Object o = clazz.newInstance();
+                this.interceptorChain.addInterceptor((MtInterceptor)clazz.newInstance());
+            }
+        }
+    }
+
+    public MtExecutor newExecutor(ExecutorType type){
+        MtExecutor executor = null;
+
+        if(ExecutorType.SIMPLE==type){
+            executor = new MtSimpleExecutor(this);
+        }
+
+        return (MtExecutor)this.interceptorChain.pluginAll(executor);
     }
 
     public Properties getMapperProperties() {
