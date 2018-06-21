@@ -1,7 +1,7 @@
 package com.mt.mybatis.plugin;
 
 /**
- * <p></p>
+ * <p>拦截器顶级接口</p>
  *
  * @author grand 2018/6/20
  * @version V1.0
