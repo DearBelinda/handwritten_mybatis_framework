@@ -6,6 +6,8 @@ import com.mt.mybatis.executor.MtSimpleExecutor;
 import com.mt.mybatis.mapper.MapperRegistory;
 import com.mt.mybatis.plugin.MtInterceptor;
 import com.mt.mybatis.plugin.MtInterceptorChain;
+import com.mt.mybatis.typehandler.MtTypeHandler;
+import com.mt.mybatis.typehandler.MtTypeHandlerRegistory;
 
 import java.io.*;
 import java.util.Properties;
@@ -26,6 +28,8 @@ public class MtConfiguation {
     private Properties mapperProperties = new Properties();
     private MapperRegistory mapperRegistory = new MapperRegistory();
     private MtInterceptorChain interceptorChain = new MtInterceptorChain();
+    private MtTypeHandlerRegistory typeHandlerRegistory = new MtTypeHandlerRegistory();
+
 
     public MtConfiguation(String configLocation){
         this.configLocation = configLocation;
@@ -42,6 +46,8 @@ public class MtConfiguation {
             loadMapperRegistory();
             //解析加载plugin
             initPluginChain();
+            //解析加载typeHandler
+            initTypeHandler();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -114,6 +120,18 @@ public class MtConfiguation {
         }
 
         return (MtExecutor)this.interceptorChain.pluginAll(executor);
+    }
+
+    public void initTypeHandler() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        String typeHandlerStr = configProperties.getProperty("typeHandler");
+        String[] typeHandlerArray = typeHandlerStr.split(",");
+        for (String typeHandler:typeHandlerArray){
+            Class clazz = this.getClass().getClassLoader().loadClass(typeHandler);
+            if(clazz!=null){
+                Object o = clazz.newInstance();
+                this.typeHandlerRegistory.regist((MtTypeHandler) clazz.newInstance());
+            }
+        }
     }
 
     public Properties getMapperProperties() {
